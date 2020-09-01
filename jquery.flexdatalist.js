@@ -593,10 +593,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
 
                 if ($.isArray(values)) {
                     $.each(values, function (i, value) {
-                        result.push(_this.fvalue._extract(value));
+                        result.push(_this.fvalue._extract(value, init));
                     });
                 } else {
-                    result = _this.fvalue._extract(values);
+                    result = _this.fvalue._extract(values, init);
                 }
 
                 if (!init) {
@@ -609,7 +609,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         /**
          * @inherited.
          */
-            _extract: function (val) {
+            _extract: function (val, init) {
                 var txt = this.text(val),
                     value = this.value(val),
                     current = _this.value,
@@ -623,7 +623,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         }
 
                         _selectedValues.push(value);
-                        this.multiple.add(value, txt);
+                        this.multiple.add(value, txt, init);
                     }
                 } else {
                     this.single(value, txt);
@@ -646,7 +646,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             /**
              * Add value and item on list.
              */
-                add: function (val, txt) {
+                add: function (val, txt, init) {
                     var _multiple = this,
                         $li = this.li(val, txt),
                         options = _this.options.get();
@@ -659,7 +659,9 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         _this.fvalue.remove($(this).parent());
                     });
 
-                    this.push(val);
+                    if (!init) {
+                        this.push(val);
+                    }
                     $alias[0].value = '';
                     this.checkLimit();
                 },
