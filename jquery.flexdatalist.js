@@ -104,6 +104,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         groupBy: false,
         selectionRequired: false,
         focusFirstResult: false,
+        keepResultsShown: true,
         hideResultsOnRemoveItem: false,
         textProperty: null,
         valueProperty: null,
@@ -1409,6 +1410,11 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         _this.fvalue.extract(item);
                         __this.remove();
                         $this.trigger('select:flexdatalist', [item, options]);
+                        var allowAdd = _this.fvalue.multiple.checkLimit();
+                        var keepOpen = _this.options.get('keepResultsShown');
+                        if (allowAdd && keepOpen) {
+                            $alias.trigger('focusin');
+                        }
                     }
                 }).hover(function () {
                     $li.removeClass('active');
