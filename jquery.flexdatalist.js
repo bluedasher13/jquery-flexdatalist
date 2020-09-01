@@ -559,15 +559,22 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         var found = [];
                         for (var idxv = 0; idxv < values.length; idxv++) {
                             var value = values[idxv];
+                            var matched = false;
+                            datalist:
                             for (var i = 0; i < data.length; i++) {
                                 var item = data[i];
                                 for (var idx = 0; idx < valueProp.length; idx++) {
                                     var prop = valueProp[idx],
                                     value = _this.isDefined(value, prop) ? value[prop] : value;
-                                    if (_this.isDefined(item, prop) && value === item[prop]) {
+                                    if (_this.isDefined(item, prop) && value === item[prop]) {    // && $.trim(value)
+                                        matched = true;
                                         found.push(item);
+                                        break datalist;
                                     }
                                 }
+                            }
+                            if (!matched && $.trim(value)) {
+                                found.push(value);
                             }
                         }
                         if (found.length > 0) {
