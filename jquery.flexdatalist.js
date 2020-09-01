@@ -298,7 +298,16 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 val = $.trim(val);
                 if (val === '' && _this.options.get('minLength') === 0) {
                     _this.data.load(function (data) {
-                        _this.results.show(data);
+                        // _this.results.show(data);
+                        var matches = [];
+                        for (var index = 0; index < data.length; index++) {
+                            var item = data[index];
+                            if (_this.isDup(item)) {
+                                continue;
+                            }
+                            matches.push(item);
+                        }
+                        _this.results.show(matches);
                     });
                 }
             },
