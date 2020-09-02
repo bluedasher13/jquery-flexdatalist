@@ -589,17 +589,21 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                                     }
                                 }
                             }
-                            if (!matched && $.trim(value)) {
+                            if (!matched) {
                                 found.push(value);
                             }
                         }
                         if (found.length > 0) {
                             _this.fvalue.extract(found, true);
                         }
+                        setTimeout(function () {
+                            _this.fvalue.multiple.checkLimit();
+                        }, 0);
                         callback(values);
                     }, values);
                     return;
                 }
+                _this.fvalue.multiple.checkLimit();
                 callback(values);
                 _this.fvalue.extract(values, init);
             },
@@ -640,8 +644,8 @@ jQuery.fn.flexdatalist = function (_option, _value) {
 
                 if (options.multiple) {
                     // For allowDuplicateValues
-                    if (!_this.isEmpty(value)) {
-                        if (_this.isDup(value)) {
+                    if (!_this.isEmpty(value) || init) {
+                        if (_this.isDup(value) && !init) {
                             return;
                         }
 
@@ -750,10 +754,12 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         values = _this.fvalue.toStr(values);
                         _this.value = values;
                         $li.remove();
-                        _this.fvalue.multiple.checkLimit();
 
                         // For allowDuplicateValues
                         _selectedValues.splice(index, 1);
+
+                        // this.checkLimit();
+                        _this.fvalue.multiple.checkLimit();
 
                         return arg;
                     }
@@ -786,15 +792,18 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         .insertBefore($inputContainer);
                 },
             /**
-             * Create new item and return it.
+             * Check limit number of values in a multiple input.
              */
                 checkLimit: function () {
                     var limit = _this.options.get('limitOfValues');
                     if (limit > 0) {
                         var $input = $multiple.find('li.input-container'),
-                            count = _selectedValues.length;
-                        (limit == count ? $input.hide() : $input.show());
+                            count = _selectedValues.length,
+                            exceed = count >= limit;
+                        (exceed ? $input.hide() : $input.show());
+                        return !exceed;
                     }
+                    return true;
                 },
             /**
              * Get li item from value.
@@ -1393,8 +1402,9 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         _this.fvalue.extract(item);
                         __this.remove();
                         $this.trigger('select:flexdatalist', [item, options]);
+                        var allowAdd = _this.fvalue.multiple.checkLimit();
                         var keepOpen = _this.options.get('keepResultsShown');
-                        if (keepOpen) {
+                        if (allowAdd && keepOpen) {
                             $alias.trigger('focusin');
                         }
                     }
