@@ -107,6 +107,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         pressEnterOnBlur: true,
         keepResultsShown: true,
         hideResultsOnRemoveItem: false,
+        sortValues: true,
         textProperty: null,
         valueProperty: null,
         visibleProperties: [],
@@ -614,6 +615,46 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 _this.fvalue.extract(values, init);
             },
         /**
+         * sort the values
+         */
+            sort: function () {
+
+                var options = _this.options.get();
+                if (!options.sortValues || !options.multiple) {
+                    return;
+                }
+
+                _selectedValues.sort(function (valueA, valueB) {
+                    var isEmptyA = [null, undefined, NaN].indexOf(valueA) !== -1;
+                    var isEmptyB = [null, undefined, NaN].indexOf(valueB) !== -1;
+                    valueA = isEmptyA ? '' : String(valueA);
+                    valueB = isEmptyB ? '' : String(valueB);
+                    return valueA.localeCompare(valueB, undefined, { numeric: true, sensitivity: 'base' });
+                });
+
+                var current = _this.fvalue.get();
+                current.sort(function (valueA, valueB) {
+                    var isEmptyA = [null, undefined, NaN].indexOf(valueA) !== -1;
+                    var isEmptyB = [null, undefined, NaN].indexOf(valueB) !== -1;
+                    valueA = isEmptyA ? '' : String(valueA);
+                    valueB = isEmptyB ? '' : String(valueB);
+                    return valueA.localeCompare(valueB, undefined, { numeric: true, sensitivity: 'base' });
+                });
+                _this.value = _this.fvalue.toStr(current);
+
+                var $inputContainer = $multiple.find('li.input-container'),
+                    $newItems = $multiple.find('li:not(.input-container)').sort(function(domA, domB){    // li.value
+                        var valueA = $(domA).data('plainValue'),
+                            valueB = $(domB).data('plainValue');
+                        var isEmptyA = [null, undefined, NaN].indexOf(valueA) !== -1;
+                        var isEmptyB = [null, undefined, NaN].indexOf(valueB) !== -1;
+                        valueA = isEmptyA ? '' : String(valueA);
+                        valueB = isEmptyB ? '' : String(valueB);
+                        return valueA.localeCompare(valueB, undefined, { numeric: true, sensitivity: 'base' });
+                   });
+               $newItems.insertBefore($inputContainer);
+            },
+        /**
          * Extract value and text.
          */
             extract: function (values, init) {
@@ -628,6 +669,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     $.each(values, function (i, value) {
                         result.push(_this.fvalue._extract(value, init));
                     });
+                    this.sort();
                 } else {
                     result = _this.fvalue._extract(values, init);
                 }
@@ -688,10 +730,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     $li.click(function () {
                         _multiple.toggle($(this));
                     // Remove
-                    }).find('.fdl-remove').click(function () {
-                        var options = _this.options.get();
+                    }).find('.fdl-remove').click(function (e) {
                         e.stopPropagation();
                         _this.fvalue.remove($(this).parent());
+                        var options = _this.options.get();
                         if (options.hideResultsOnRemoveItem) {
                             _this.results.remove();
                         } else {
@@ -702,6 +744,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
 
                     if (!init) {
                         this.push(val);
+                        _this.fvalue.sort();
                     }
                     $alias[0].value = '';
                     this.checkLimit();
@@ -711,7 +754,8 @@ jQuery.fn.flexdatalist = function (_option, _value) {
              */
                 push: function (val, index) {
                     var current = _this.fvalue.get();
-                    val = _this.fvalue.toObj(val);
+                    // the variable `val` has already been stringify, we don't need `toObj()`
+                    // val = _this.fvalue.toObj(val);
                     current.push(val);
                     val = _this.fvalue.toStr(current);
                     _this.value = val;
@@ -795,15 +839,17 @@ jQuery.fn.flexdatalist = function (_option, _value) {
              */
                 li: function (val, txt) {
                     var $inputContainer = $multiple.find('li.input-container')
-                    return $('<li>')
+                    var $li = $('<li>')
                         .addClass('value' + (_this.options.get('toggleSelected') ? ' toggle' : ''))
                         .append('<span class="text">' + txt + '</span>')
                         .append('<span class="fdl-remove">&times;</span>')
                         .data({
                             'text': txt,
-                            'value': _this.fvalue.toObj(val)
+                            'value': _this.fvalue.toObj(val),
+                            'plainValue': val
                         })
                         .insertBefore($inputContainer);
+                   return $li;
                 },
             /**
              * Check limit number of values in a multiple input.
