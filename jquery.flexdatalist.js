@@ -1822,6 +1822,8 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 return true;
             } else if (value === null) {
                 return true;
+            } else if (Number.isNaN(value)) {
+                return true;
             } else if (value === true) {
                 return false;
             } else if (this.length(value) === 0) {
