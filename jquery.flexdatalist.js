@@ -643,20 +643,28 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     current = _this.value,
                     options = _this.options.get();
 
+                var result = {value: value, text: txt};
+                var succed = false;
                 if (options.multiple) {
                     // For allowDuplicateValues
-                    if (!_this.isEmpty(value) || init) {
-                        if (_this.isDup(value) && !init) {
-                            return;
-                        }
-
+                    var hasValue = !_this.isEmpty(value) || init;
+                    var isUnique = !_this.isDup(value) || init;
+                    if (hasValue && isUnique) {
+                        succed = true;
                         _selectedValues.push(value);
                         this.multiple.add(value, txt, init);
                     }
+                    if (!hasValue) {
+                        $this.trigger('error:flexdatalist.value.empty', [result, options]);
+                    }
+                    if (!isUnique) {
+                        $this.trigger('error:flexdatalist.value.duplicate', [result, options]);
+                    }
                 } else {
+                    succed = true;
                     this.single(value, txt);
                 }
-                return {value: value, text: txt};
+                return result;
             },
         /**
          * Default input value.
