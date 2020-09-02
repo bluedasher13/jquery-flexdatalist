@@ -9,6 +9,7 @@
  *
  */
 .flexdatalist-results {
+    display: block;
     position: absolute;
     top: 0;
     left: 0;
@@ -25,6 +26,7 @@
     padding: 0;
 }
 .flexdatalist-results li {
+    display: block;
     border-bottom: 1px solid #ccc;
     padding: 8px 15px;
     font-size: 14px;
@@ -71,6 +73,7 @@
     clear: both;
 }
 .flexdatalist-multiple {
+    display: block;
     width: 100%;
     margin: 0;
     padding: 0;
