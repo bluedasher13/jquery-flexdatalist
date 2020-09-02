@@ -103,6 +103,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         groupBy: false,
         selectionRequired: false,
         focusFirstResult: false,
+        pressEnterOnBlur: true,
         keepResultsShown: true,
         textProperty: null,
         valueProperty: null,
@@ -178,6 +179,11 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Focusout
             .on('focusout', function (event) {
+                var pressEnter = _this.options.get('pressEnterOnBlur');
+                if (pressEnter) {
+                    var enterEvent = window.KeyboardEvent ? new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13 }) : $.Event('keyup', { key: 'Enter', keyCode: 13, which: 13 });
+                    _this.action.keypressValue(enterEvent, 13);
+                }
                 if ($multiple) {
                     $multiple.removeClass('focus');
                 }
