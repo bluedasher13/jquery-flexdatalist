@@ -95,6 +95,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         url: null,
         data: [],
         params: {},
+        rootContainer: 'body',
         relatives: null,
         chainedRelatives: false,
         cache: true,
@@ -1521,11 +1522,12 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 if ($multiple) {
                     $target = $multiple;
                 }
+                var $rootContainer = $this.parent();
                 var $container = $('ul.flexdatalist-results');
                 if ($container.length === 0) {
                     $container = $('<ul>')
                         .addClass('flexdatalist-results ')
-                        .appendTo('body')
+                        .appendTo($rootContainer.length ? $rootContainer : 'body')
                         .attr('id', $alias.attr('id') + '-results')
                         .css({
                             'border-color': $target.css("border-left-color"),
@@ -1769,10 +1771,16 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 $target = $results.data('target');
             if ($results.length > 0) {
                 // Set some required CSS properties
+                var $rootContainer = $this.parent();
+                if ($rootContainer.length && !/^(relative|absolute|fixed|sticky)$/i.test($rootContainer.css('position'))) {
+                    $rootContainer.css('position', 'relative')
+                }
+                var offsetX = $target.prop('offsetLeft'),
+                    offsetY = ($target.prop('offsetTop') + $target.outerHeight());
                 $results.css({
                     'width': $target.outerWidth() + 'px',
-                    'top': (($target.offset().top + $target.outerHeight())) + 'px',
-                    'left': $target.offset().left + 'px'
+                    'top': offsetY + 'px',
+                    'left': offsetX + 'px'
                 });
             }
         }
