@@ -621,6 +621,19 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 }
 
                 if ($.isArray(values)) {
+                    var options = _this.options.get();
+                    if (options.sortValues) {
+                        values.sort(function (valueA, valueB) {
+                            valueA = _this.fvalue.value(valueA);
+                            valueB = _this.fvalue.value(valueB);
+                            var isEmptyA = [null, undefined, NaN].indexOf(valueA) !== -1;
+                            var isEmptyB = [null, undefined, NaN].indexOf(valueB) !== -1;
+                            valueA = isEmptyA ? '' : String(valueA);
+                            valueB = isEmptyB ? '' : String(valueB);
+                            return valueA.localeCompare(valueB, undefined, { numeric: true, sensitivity: 'base' });
+                        });
+                    }
+
                     $.each(values, function (i, value) {
                         result.push(_this.fvalue._extract(value, init));
                     });
@@ -709,13 +722,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     var current = _this.fvalue.get();
                     // the variable `val` has already been stringify, we don't need `toObj()`
                     // val = _this.fvalue.toObj(val);
-                    current.push(val);
 
                     var options = _this.options.get();
                     if (options.sortValues) {
                         current.sort(function (valueA, valueB) {
-                            // valueA = _this.fvalue.value(valueA);
-                            // valueB = _this.fvalue.value(valueB);
                             var isEmptyA = [null, undefined, NaN].indexOf(valueA) !== -1;
                             var isEmptyB = [null, undefined, NaN].indexOf(valueB) !== -1;
                             valueA = isEmptyA ? '' : String(valueA);
@@ -724,6 +734,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         });
                     }
 
+                    current.push(val);
                     val = _this.fvalue.toStr(current);
                     _this.value = val;
                 },
