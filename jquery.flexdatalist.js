@@ -160,6 +160,9 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             $alias
             // Focusin
             .on('focusin', function (event) {
+                if ($this.triggerHandler('focusin:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
                 _this.action.redoSearchFocus(event);
                 _this.action.showAllResults(event);
                 if ($multiple) {
@@ -168,6 +171,12 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Keydown
             .on('input keydown', function (event) {
+                if ($this.triggerHandler('input:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
+                if ($this.triggerHandler('keydown:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
                 if (_this.keyNum(event) === 9) {
                     _this.results.remove();
                 }
@@ -176,6 +185,12 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Keyup
             .on('input keyup', function (event) {
+                if ($this.triggerHandler('input:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
+                if ($this.triggerHandler('keyup:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
                 _this.action.keypressValue(event, 13);
                 _this.action.keypressSearch(event);
                 _this.action.copyValue(event);
@@ -187,6 +202,9 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Focusout
             .on('focusout', function (event) {
+                if ($this.triggerHandler('focusout:flexdatalist.inputValue', [$alias[0]]) === false) {
+                    return;
+                }
                 var pressEnter = _this.options.get('pressEnterOnBlur');
                 if (pressEnter) {
                     var enterEvent = window.KeyboardEvent ? new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13 }) : $.Event('keyup', { key: 'Enter', keyCode: 13, which: 13 });
