@@ -107,6 +107,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         pressEnterOnBlur: true,
         keepResultsShown: true,
         hideResultsOnRemoveItem: false,
+        dynamicInputWidth: false,
         sortValues: true,
         textProperty: null,
         valueProperty: null,
@@ -330,7 +331,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
          */
             inputWidth: function (event) {
                 var options = _this.options.get();
-                if (options.multiple) {
+                if (options.multiple && options.dynamicInputWidth) {
                     var keyword = $alias.val(),
                         fontSize = parseInt($alias.css('fontSize').replace('px', '')),
                         minWidth = 40,
