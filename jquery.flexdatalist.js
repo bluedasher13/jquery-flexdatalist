@@ -74,6 +74,9 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     return target.fdisabled();
                 }
                 target.fdisabled(_value);
+            // Get autocomplete <input>
+            } else if (_option === 'alias') {
+                return target.getAlias();
             // Option(s)
             } else if (typeof _option === 'string') {
                 if (typeof _value === 'undefined') {
@@ -149,6 +152,13 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             fid = 'flex' + id,
             $alias = null,
             $multiple = null;
+
+    /**
+     * Get alias
+     */
+        this.getAlias = function () {
+            return $alias;
+        };
 
     /**
      * Initialization
