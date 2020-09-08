@@ -226,14 +226,15 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 var key = _this.keyNum(event),
                     val = $alias[0].value,
                     options = _this.options.get();
-                if (val.length > 0
-                    && key === keyCode
-                    && !options.selectionRequired
-                    && options.multiple) {
+                if (val.length > 0 && options.multiple && key === keyCode) {
+                    if (options.selectionRequired) {
+                        $this.trigger('error:flexdatalist.inputValue.notSelected', [$alias[0], val]);
+                    } else {
                         var val = $alias[0].value;
                         event.preventDefault();
                         _this.fvalue.extract(val);
                         _this.results.remove();
+                    }
                 }
             },
         /**
