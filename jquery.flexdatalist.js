@@ -1891,7 +1891,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 return true;
             } else if (value === null) {
                 return true;
-            } else if (Number.isNaN(value)) {
+            } else if (value !== value) {   // Determine equality to NaN, because IE dosen't support `Number.isNaN()`. Alternative plan: `typeof value === 'number' && isNaN(value)`.
                 return true;
             } else if (value === true) {
                 return false;
