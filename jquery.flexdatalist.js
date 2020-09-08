@@ -798,7 +798,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     _this.value = val;
                 },
             /**
-             * Toggle value.
+             * Toggle value. (With Bugs)
              */
                 toggle: function (val) {
                     var options = _this.options.get();
