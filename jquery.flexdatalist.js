@@ -891,7 +891,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         }
                     } else if (_this.isDefined(item, valueProperty)) {
                         value = item[valueProperty];
-                    } else if (_this.isDefined(item, options.searchIn[0])) {
+                    } else if (!valueProperty && _this.isDefined(item, options.searchIn[0])) {
                         value = item[options.searchIn[0]];
                     } else {
                         value = null;
