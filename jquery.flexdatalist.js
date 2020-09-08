@@ -104,6 +104,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         groupBy: false,
         selectionRequired: false,
         focusFirstResult: false,
+        hideResultsOnRemoveItem: false,
         textProperty: null,
         valueProperty: null,
         visibleProperties: [],
@@ -681,7 +682,15 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         _multiple.toggle($(this));
                     // Remove
                     }).find('.fdl-remove').click(function () {
+                        var options = _this.options.get();
+                        e.stopPropagation();
                         _this.fvalue.remove($(this).parent());
+                        if (options.hideResultsOnRemoveItem) {
+                            _this.results.remove();
+                        } else {
+                            _this.position();
+                            $alias.trigger('focusin');
+                        }
                     });
 
                     if (!init) {
