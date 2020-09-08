@@ -106,6 +106,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         focusFirstResult: false,
         pressEnterOnBlur: true,
         keepResultsShown: true,
+        hideResultsOnRemoveItem: false,
         sortValues: true,
         textProperty: null,
         valueProperty: null,
@@ -710,7 +711,14 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                         _multiple.toggle($(this));
                     // Remove
                     }).find('.fdl-remove').click(function () {
+                        var options = _this.options.get();
+                        e.stopPropagation();
                         _this.fvalue.remove($(this).parent());
+                        if (options.hideResultsOnRemoveItem) {
+                            _this.results.remove();
+                        } else {
+                            _this.position();
+                        }
                     });
 
                     if (!init) {
