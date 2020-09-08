@@ -91,7 +91,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         destroy(this);
     }
 
-    var _options = $.extend({
+    var _options = {
         url: null,
         data: [],
         params: {},
@@ -133,7 +133,11 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         limitOfValues: 0,
         valuesSeparator: ',',
         debug: true
-    }, _option);
+    };
+    
+    if ($.isPlainObject(_option)) {
+        $.extend(_options, _option);
+    }
 
     return this.each(function (id) {
         var $this = $(this),
