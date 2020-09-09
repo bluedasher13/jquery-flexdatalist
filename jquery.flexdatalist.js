@@ -112,6 +112,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         hideResultsOnRemoveItem: false,
         dynamicInputWidth: false,
         sortValues: true,
+        strictValues: false,
         searchType: 'text',
         searchEvents: null,
         textProperty: null,
@@ -255,7 +256,8 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             // Run garbage collector
             this.cache.gc();
 
-            if (options.selectionRequired) {
+            // Clear values only when both `selectionRequired` and `strictValues` are set to true
+            if (options.selectionRequired && options.strictValues) {
                 _this.fvalue.clear(true, true);
             }
             this.fvalue._load(options.originalValue, function (values, matches) {
