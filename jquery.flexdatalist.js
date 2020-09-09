@@ -260,7 +260,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             if (options.selectionRequired && options.strictValues) {
                 _this.fvalue.clear(true, true);
             }
-            this.fvalue._load(options.originalValue, function (values, matches) {
+
+            // var strValues = options.originalValue;    // (with bug) If `selectionRequired` is on, hidden values will be deleted, but <li> doesn't
+            var strValues = _this.value;
+            this.fvalue._load(strValues, function (values, matches) {
                 _this.fdisabled(options.disabled);
                 $this.trigger('init:flexdatalist', [options]);
             }, true);
