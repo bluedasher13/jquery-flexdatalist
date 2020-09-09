@@ -112,6 +112,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         hideResultsOnRemoveItem: false,
         dynamicInputWidth: false,
         sortValues: true,
+        searchType: 'text',
         searchEvents: null,
         textProperty: null,
         valueProperty: null,
@@ -475,6 +476,12 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                     .addClass('flexdatalist-alias ' + aliasid)
                     .removeClass('flexdatalist')
                     .attr('autocomplete', 'off');
+
+                var inputType = _this.options.get('searchType');
+                if (inputType) {
+                    $alias.attr('type', inputType);
+                }
+
                 return $alias;
             },
         /**
