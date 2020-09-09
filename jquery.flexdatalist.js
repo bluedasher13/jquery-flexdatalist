@@ -203,6 +203,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Keydown
             .on('input keydown', function (event) {
+                // Enter|Esc|Up|Down
+                if (/^(13|27|38|40)$/.test(_this.keyNum(event)))  {
+                    return;
+                }
                 if ($this.triggerHandler('input:flexdatalist.inputValue', [$alias[0]]) === false) {
                     return;
                 }
@@ -217,6 +221,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
             })
             // Keyup
             .on('input keyup', function (event) {
+                // Enter|Esc|Up|Down
+                if (/^(13|27|38|40)$/.test(_this.keyNum(event)))  {
+                    return;
+                }
                 if ($this.triggerHandler('input:flexdatalist.inputValue', [$alias[0]]) === false) {
                     return;
                 }
