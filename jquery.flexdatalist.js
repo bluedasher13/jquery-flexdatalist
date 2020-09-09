@@ -112,6 +112,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         hideResultsOnRemoveItem: false,
         dynamicInputWidth: false,
         sortValues: true,
+        searchEvents: null,
         textProperty: null,
         valueProperty: null,
         visibleProperties: [],
@@ -166,6 +167,25 @@ jQuery.fn.flexdatalist = function (_option, _value) {
         this.init = function () {
             var options = this.options.init();
             this.set.up();
+
+            if (options.searchEvents) {
+                var events = options.searchEvents;
+                if ($.isPlainObject(events)) {
+                    events = $.map(events, function (handler, type) {
+                        return {
+                            'type': type,
+                            'handler': handler
+                        };
+                    });
+                }
+                if ($.isArray(events)) {
+                    $.each(events, function (idx, item) {
+                        if (item.type && item.handler) {
+                            $alias.on(item.type, item.handler);
+                        }
+                    });
+                }
+            }
 
             $alias
             // Focusin
