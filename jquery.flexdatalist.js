@@ -239,7 +239,13 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 }
                 var pressEnter = _this.options.get('pressEnterOnBlur');
                 if (pressEnter) {
-                    var enterEvent = window.KeyboardEvent ? new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13 }) : $.Event('keyup', { key: 'Enter', keyCode: 13, which: 13 });
+                    var enterEvent;
+                    try {
+                        // IE doesn't support `new KeyboardEvent()`
+                        enterEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', keyCode: 13, which: 13 });
+                    } catch (e) {
+                        enterEvent = $.Event('keyup', { key: 'Enter', keyCode: 13, which: 13 });
+                    }
                     _this.action.keypressValue(enterEvent, 13);
                 }
                 if ($multiple) {
@@ -1592,9 +1598,10 @@ jQuery.fn.flexdatalist = function (_option, _value) {
 
                     if (visibleProperty.indexOf('{') > -1) {
                         var str = _this.fvalue.placeholders.replace(item, visibleProperty),
-                            parsed = _this.fvalue.placeholders.parse(visibleProperty);
+                            parsed = _this.fvalue.placeholders.parse(visibleProperty),
+                            propNames = Object.keys(parsed).reduce(function(carry, val, idx, arr) { carry.push(parsed[val]); return carry; }, []);    // IE doesn't support Object.values(), `propNames = Object.values(parsed)` won't work
                         $item = $('<span>')
-                            .addClass('item item-' + Object.values(parsed).join('-'))
+                            .addClass('item item-' + propNames.join('-'))
                             .html(str + ' ').appendTo($li);
                     } else {
                         if (options.groupBy && options.groupBy === visibleProperty || !_this.isDefined(item, visibleProperty)) {
