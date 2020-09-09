@@ -190,7 +190,7 @@ jQuery.fn.flexdatalist = function (_option, _value) {
                 if (_this.keyNum(event) === 9) {
                     _this.results.remove();
                 }
-                _this.action.keypressValue(event, 188);
+                _this.action.keypressValue(event, 188);    //  (with bugs) 如果 `valuesSeparator` 不是逗號，此行為則屬不當
                 _this.action.backSpaceKeyRemove(event);
             })
             // Keyup
